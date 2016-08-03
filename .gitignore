@@ -1,0 +1,12 @@
+.gradle
+/local.properties
+.DS_Store
+*/build
+/build
+.idea
+*.apk
+*.iml
+crashlytics-build.properties
+com_crashlytics_export_strings.xml
+manifest-merger-release-report.txt
+*.paw

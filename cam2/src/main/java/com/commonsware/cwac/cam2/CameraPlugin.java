@@ -25,31 +25,31 @@ package com.commonsware.cwac.cam2;
  * behavior of the camera on the fly breaks the camera.
  */
 public interface CameraPlugin {
-  /**
-   * Returns a CameraConfigurator of a given class for this
-   * plugin. Plugins ideally should support both ClassicCameraConfigurator
-   * and CameraTwoConfigurator, though that is up to the plugin.
-   * <p/>
-   * Configurators should be fairly cheap objects to instantiate.
-   * While at the moment they are only used once per session,
-   * that may not be true in the future, and they are not being cached.
-   *
-   * @param type ClassicCameraConfigurator.class or
-   *             CameraTwoConfigurator.class, indicating which type
-   *             of configurator to create
-   * @param <T> ClassicCameraConfigurator or CameraTwoConfigurator
-   * @return instance of the designated configurator class, or
-   *           null if that type is not supported
-   */
-  <T extends CameraConfigurator> T buildConfigurator(Class<T> type);
+	/**
+	 * Returns a CameraConfigurator of a given class for this
+	 * plugin. Plugins ideally should support both ClassicCameraConfigurator
+	 * and CameraTwoConfigurator, though that is up to the plugin.
+	 * <p/>
+	 * Configurators should be fairly cheap objects to instantiate.
+	 * While at the moment they are only used once per session,
+	 * that may not be true in the future, and they are not being cached.
+	 *
+	 * @param type ClassicCameraConfigurator.class or
+	 *             CameraTwoConfigurator.class, indicating which type
+	 *             of configurator to create
+	 * @param <T>  ClassicCameraConfigurator or CameraTwoConfigurator
+	 * @return instance of the designated configurator class, or
+	 * null if that type is not supported
+	 */
+	<T extends CameraConfigurator> T buildConfigurator(Class<T> type);
 
-  /**
-   * Validates whether or not the plugin is valid for this
-   * CameraSession. Throw a runtime exception if it is not.
-   *
-   * @param session the session to validate against
-   */
-  void validate(CameraSession session);
+	/**
+	 * Validates whether or not the plugin is valid for this
+	 * CameraSession. Throw a runtime exception if it is not.
+	 *
+	 * @param session the session to validate against
+	 */
+	void validate(CameraSession session);
 
-  void destroy();
+	void destroy();
 }

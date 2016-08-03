@@ -21,19 +21,19 @@ package com.commonsware.cwac.cam2;
  * needs writing to.
  */
 public interface ImageProcessor {
-  /**
-   * Manipulate the picture indicated by the ImageContext.
-   * Properties for configuring this particular bit of image
-   * processing can be obtained from the PictureTransaction.
-   *
-   * @param xact the PictureTransaction, containing properties
-   * @param imageContext the picture itself
-   */
-  void process(PictureTransaction xact, ImageContext imageContext);
+	/**
+	 * Manipulate the picture indicated by the ImageContext.
+	 * Properties for configuring this particular bit of image
+	 * processing can be obtained from the PictureTransaction.
+	 *
+	 * @param xact         the PictureTransaction, containing properties
+	 * @param imageContext the picture itself
+	 */
+	void process(PictureTransaction xact, ImageContext imageContext);
 
-  /**
-   * @return a unique tag to identify this processor among
-   * any other processors in the chain
-   */
-  String getTag();
+	/**
+	 * @return a unique tag to identify this processor among
+	 * any other processors in the chain
+	 */
+	String getTag();
 }

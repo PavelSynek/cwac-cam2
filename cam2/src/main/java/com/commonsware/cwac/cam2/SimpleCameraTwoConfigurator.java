@@ -10,24 +10,24 @@ import android.media.ImageReader;
  * and override the specific methods that your plugin needs.
  */
 public class SimpleCameraTwoConfigurator
-  implements CameraTwoConfigurator {
-  @Override
-  public ImageReader buildImageReader() {
-    return null;
-  }
+		implements CameraTwoConfigurator {
+	@Override
+	public ImageReader buildImageReader() {
+		return null;
+	}
 
-  @Override
-  public void addToCaptureRequest(CameraSession session,
-                                  CameraCharacteristics cc,
-                                  boolean facingFront,
-                                  CaptureRequest.Builder captureBuilder) {
+	@Override
+	public void addToCaptureRequest(CameraSession session,
+									CameraCharacteristics cc,
+									boolean facingFront,
+									CaptureRequest.Builder captureBuilder) {
 
-  }
+	}
 
-  @Override
-  public void addToPreviewRequest(CameraSession session,
-                                  CameraCharacteristics cc,
-                                  CaptureRequest.Builder captureBuilder) {
+	@Override
+	public void addToPreviewRequest(CameraSession session,
+									CameraCharacteristics cc,
+									CaptureRequest.Builder captureBuilder) {
 
-  }
+	}
 }

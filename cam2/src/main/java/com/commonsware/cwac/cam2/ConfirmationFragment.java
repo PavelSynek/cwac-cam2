@@ -1,15 +1,15 @@
 /***
- Copyright (c) 2015 CommonsWare, LLC
-
- Licensed under the Apache License, Version 2.0 (the "License"); you may
- not use this file except in compliance with the License. You may obtain
- a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+ * Copyright (c) 2015 CommonsWare, LLC
+ * <p/>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.commonsware.cwac.cam2;
@@ -28,123 +28,119 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 public class ConfirmationFragment extends Fragment {
-  private static final String ARG_NORMALIZE_ORIENTATION=
-    "normalizeOrientation";
-  private Float quality;
+	private static final String ARG_NORMALIZE_ORIENTATION =
+			"normalizeOrientation";
+	private Float quality;
 
-  public interface Contract {
-    void completeRequest(ImageContext imageContext, boolean isOK);
-    void retakePicture();
-  }
+	public interface Contract {
+		void completeRequest(ImageContext imageContext, boolean isOK);
 
-  private ImageView iv;
-  private ImageContext imageContext;
+		void retakePicture();
+	}
 
-  public static ConfirmationFragment newInstance(boolean normalizeOrientation) {
-    ConfirmationFragment result=new ConfirmationFragment();
-    Bundle args=new Bundle();
+	private ImageView iv;
+	private ImageContext imageContext;
 
-    args.putBoolean(ARG_NORMALIZE_ORIENTATION, normalizeOrientation);
-    result.setArguments(args);
+	public static ConfirmationFragment newInstance(boolean normalizeOrientation) {
+		ConfirmationFragment result = new ConfirmationFragment();
+		Bundle args = new Bundle();
 
-    return(result);
-  }
+		args.putBoolean(ARG_NORMALIZE_ORIENTATION, normalizeOrientation);
+		result.setArguments(args);
 
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+		return (result);
+	}
 
-    setRetainInstance(true);
-    setHasOptionsMenu(true);
-  }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-  @Override
-  public void onAttach(Activity activity) {
-    if (!(activity instanceof Contract)) {
-      throw new IllegalStateException("Hosting activity must implement Contract interface");
-    }
+		setRetainInstance(true);
+		setHasOptionsMenu(true);
+	}
 
-    super.onAttach(activity);
-  }
+	@Override
+	public void onAttach(Activity activity) {
+		if (!(activity instanceof Contract)) {
+			throw new IllegalStateException("Hosting activity must implement Contract interface");
+		}
 
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    iv=new ImageView(getActivity());
+		super.onAttach(activity);
+	}
 
-    if (imageContext!=null) {
-      loadImage(quality);
-    }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		iv = new ImageView(getActivity());
 
-    return(iv);
-  }
+		if (imageContext != null) {
+			loadImage(quality);
+		}
 
-  @Override
-  public void onHiddenChanged(boolean isHidden) {
-    super.onHiddenChanged(isHidden);
+		return (iv);
+	}
 
-    if (!isHidden) {
-      ActionBar ab=getActivity().getActionBar();
+	@Override
+	public void onHiddenChanged(boolean isHidden) {
+		super.onHiddenChanged(isHidden);
 
-      if (ab==null) {
-        throw new IllegalStateException("CameraActivity confirmation requires an action bar!");
-      }
-      else {
-        ab.setBackgroundDrawable(getActivity()
-            .getResources()
-            .getDrawable(R.drawable.cwac_cam2_action_bar_bg_translucent));
-        ab.setTitle("");
+		if (!isHidden) {
+			ActionBar ab = getActivity().getActionBar();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          ab.setDisplayHomeAsUpEnabled(true);
-          ab.setHomeAsUpIndicator(R.drawable.cwac_cam2_ic_close_white);
-        }
-        else {
-          ab.setIcon(R.drawable.cwac_cam2_ic_close_white);
-          ab.setDisplayShowHomeEnabled(true);
-          ab.setHomeButtonEnabled(true);
-        }
-      }
-    }
-  }
+			if (ab == null) {
+				throw new IllegalStateException("CameraActivity confirmation requires an action bar!");
+			} else {
+				ab.setBackgroundDrawable(getActivity()
+						.getResources()
+						.getDrawable(R.drawable.cwac_cam2_action_bar_bg_translucent));
+				ab.setTitle("");
 
-  @Override
-  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.cwac_cam2_confirm, menu);
-  }
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+					ab.setDisplayHomeAsUpEnabled(true);
+					ab.setHomeAsUpIndicator(R.drawable.cwac_cam2_ic_close_white);
+				} else {
+					ab.setIcon(R.drawable.cwac_cam2_ic_close_white);
+					ab.setDisplayShowHomeEnabled(true);
+					ab.setHomeButtonEnabled(true);
+				}
+			}
+		}
+	}
 
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId()==android.R.id.home) {
-      getContract().completeRequest(imageContext, false);
-    }
-    else if (item.getItemId()==R.id.cwac_cam2_ok) {
-      getContract().completeRequest(imageContext, true);
-    }
-    else if (item.getItemId()==R.id.cwac_cam2_retry) {
-      getContract().retakePicture();
-    }
-    else {
-      return(super.onOptionsItemSelected(item));
-    }
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.cwac_cam2_confirm, menu);
+	}
 
-    return(true);
-  }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == android.R.id.home) {
+			getContract().completeRequest(imageContext, false);
+		} else if (item.getItemId() == R.id.cwac_cam2_ok) {
+			getContract().completeRequest(imageContext, true);
+		} else if (item.getItemId() == R.id.cwac_cam2_retry) {
+			getContract().retakePicture();
+		} else {
+			return (super.onOptionsItemSelected(item));
+		}
 
-  public void setImage(ImageContext imageContext, Float quality) {
-    this.imageContext=imageContext;
-    this.quality=quality;
+		return (true);
+	}
 
-    if (iv!=null) {
-      loadImage(quality);
-    }
-  }
+	public void setImage(ImageContext imageContext, Float quality) {
+		this.imageContext = imageContext;
+		this.quality = quality;
 
-  private Contract getContract() {
-    return((Contract)getActivity());
-  }
+		if (iv != null) {
+			loadImage(quality);
+		}
+	}
 
-  private void loadImage(Float quality) {
-    iv.setImageBitmap(imageContext.buildPreviewThumbnail(getActivity(),
-      quality, getArguments().getBoolean(ARG_NORMALIZE_ORIENTATION)));
-  }
+	private Contract getContract() {
+		return ((Contract) getActivity());
+	}
+
+	private void loadImage(Float quality) {
+		iv.setImageBitmap(imageContext.buildPreviewThumbnail(getActivity(),
+				quality, getArguments().getBoolean(ARG_NORMALIZE_ORIENTATION)));
+	}
 }

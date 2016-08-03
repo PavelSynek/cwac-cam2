@@ -23,35 +23,35 @@ import android.media.ImageReader;
  * part of a CameraPlugin for configuring camera behavior.
  */
 public interface CameraTwoConfigurator extends CameraConfigurator {
-  /**
-   * @return an ImageReader to be used by the CameraTwoEngine,
-   * or null if this configurator is not responsible for creating
-   * the ImageReader
-   */
-  ImageReader buildImageReader();
+	/**
+	 * @return an ImageReader to be used by the CameraTwoEngine,
+	 * or null if this configurator is not responsible for creating
+	 * the ImageReader
+	 */
+	ImageReader buildImageReader();
 
-  /**
-   * Updates a CaptureRequest to reflect what the plugin needs.
-   *
-   * @param cc CameraCharacteristics for the camera being used
-   * @param facingFront true if the camera is front-facing, false
-   *                    otherwise
-   * @param captureBuilder the builder for the request, to be
-   *                       configured
-   */
-  void addToCaptureRequest(CameraSession session,
-                           CameraCharacteristics cc,
-                           boolean facingFront,
-                           CaptureRequest.Builder captureBuilder);
+	/**
+	 * Updates a CaptureRequest to reflect what the plugin needs.
+	 *
+	 * @param cc             CameraCharacteristics for the camera being used
+	 * @param facingFront    true if the camera is front-facing, false
+	 *                       otherwise
+	 * @param captureBuilder the builder for the request, to be
+	 *                       configured
+	 */
+	void addToCaptureRequest(CameraSession session,
+							 CameraCharacteristics cc,
+							 boolean facingFront,
+							 CaptureRequest.Builder captureBuilder);
 
-  /**
-   * Updates a preview CaptureRequest to reflect what the plugin needs.
-   *
-   * @param cc CameraCharacteristics for the camera being used
-   * @param captureBuilder the builder for the request, to be
-   *                       configured
-   */
-  void addToPreviewRequest(CameraSession session,
-                           CameraCharacteristics cc,
-                           CaptureRequest.Builder captureBuilder);
+	/**
+	 * Updates a preview CaptureRequest to reflect what the plugin needs.
+	 *
+	 * @param cc             CameraCharacteristics for the camera being used
+	 * @param captureBuilder the builder for the request, to be
+	 *                       configured
+	 */
+	void addToPreviewRequest(CameraSession session,
+							 CameraCharacteristics cc,
+							 CaptureRequest.Builder captureBuilder);
 }

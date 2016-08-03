@@ -22,25 +22,25 @@ import android.media.MediaRecorder;
  * part of a CameraPlugin for configuring camera behavior.
  */
 public interface ClassicCameraConfigurator extends CameraConfigurator {
-  /**
-   * Update the Camera.Parameters based on whatever this particular
-   * configurator is set up to do.
-   *
-   * @param info CameraInfo for the camera that we are configuring
-   * @param camera the camera we are configuring
-   * @param params the current camera parameters, as originally
-   *               retrieved from the camera and as modified by
-   *               prior configurators in the chain
-   * @return the same Camera.Parameters as was passed in as params,
-   * just with modified contents
-   */
-  Camera.Parameters configureStillCamera(CameraSession session,
-                                         Camera.CameraInfo info,
-                                         Camera camera,
-                                         Camera.Parameters params);
+	/**
+	 * Update the Camera.Parameters based on whatever this particular
+	 * configurator is set up to do.
+	 *
+	 * @param info   CameraInfo for the camera that we are configuring
+	 * @param camera the camera we are configuring
+	 * @param params the current camera parameters, as originally
+	 *               retrieved from the camera and as modified by
+	 *               prior configurators in the chain
+	 * @return the same Camera.Parameters as was passed in as params,
+	 * just with modified contents
+	 */
+	Camera.Parameters configureStillCamera(CameraSession session,
+										   Camera.CameraInfo info,
+										   Camera camera,
+										   Camera.Parameters params);
 
-  void configureRecorder(CameraSession session,
-                         int cameraId,
-                         VideoTransaction xact,
-                         MediaRecorder recorder);
+	void configureRecorder(CameraSession session,
+						   int cameraId,
+						   VideoTransaction xact,
+						   MediaRecorder recorder);
 }
