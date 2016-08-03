@@ -217,10 +217,7 @@ public class CameraActivity extends AbstractCameraActivity implements Confirmati
 	}
 
 	private boolean normalizeOrientation() {
-		boolean result = !getIntent()
-				.getBooleanExtra(EXTRA_SKIP_ORIENTATION_NORMALIZATION, false);
-
-		return result;
+		return !getIntent().getBooleanExtra(EXTRA_SKIP_ORIENTATION_NORMALIZATION, false);
 	}
 
 	/**

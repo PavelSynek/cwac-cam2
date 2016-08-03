@@ -44,8 +44,8 @@ public class CameraFragment extends Fragment {
 	private static final String ARG_FACING_EXACT_MATCH = "facingExactMatch";
 	private static final String ARG_CUSTOM_LAYOUT = "customLayout";
 	private CameraController controller;
+	private CameraView cameraView;
 	private ViewGroup previewStack;
-	private FloatingActionButton fabPicture;
 	private FloatingActionButton fabSwitch;
 	private View progress;
 	private boolean mirrorPreview = false;
@@ -116,11 +116,6 @@ public class CameraFragment extends Fragment {
 					ab.setHomeButtonEnabled(false);
 				}
 			}
-
-			if (fabPicture != null) {
-				fabPicture.setEnabled(true);
-				fabSwitch.setEnabled(canSwitchSources());
-			}
 		}
 	}
 
@@ -175,14 +170,6 @@ public class CameraFragment extends Fragment {
 		previewStack = (ViewGroup) v.findViewById(R.id.cwac_cam2_preview_stack);
 
 		progress = v.findViewById(R.id.cwac_cam2_progress);
-		fabPicture = (FloatingActionButton) v.findViewById(R.id.cwac_cam2_picture);
-
-		fabPicture.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				takePicture();
-			}
-		});
 
 		fabSwitch = (FloatingActionButton) v.findViewById(R.id.cwac_cam2_switch_camera);
 		fabSwitch.setOnClickListener(new View.OnClickListener() {
@@ -200,10 +187,16 @@ public class CameraFragment extends Fragment {
 			}
 		});
 
+		cameraView = (CameraView) v.findViewById(R.id.cwac_cam2_camera_view);
+		cameraView.setOnClickListener(new View.OnClickListener() {
+			@Override public void onClick(View view) {
+				takePicture();
+			}
+		});
+
 		onHiddenChanged(false); // hack, since this does not get
 		// called on initial display
 
-		fabPicture.setEnabled(false);
 		fabSwitch.setEnabled(false);
 
 		if (controller != null && controller.getNumberOfCameras() > 0) {
@@ -270,7 +263,6 @@ public class CameraFragment extends Fragment {
 		if (event.exception == null) {
 			progress.setVisibility(View.GONE);
 			fabSwitch.setEnabled(canSwitchSources());
-			fabPicture.setEnabled(true);
 			previewStack.setOnTouchListener(null);
 		} else {
 			controller.postError(ErrorConstants.ERROR_OPEN_CAMERA, event.exception);
@@ -289,7 +281,6 @@ public class CameraFragment extends Fragment {
 					getArguments().getBoolean(ARG_SKIP_ORIENTATION_NORMALIZATION, false));
 		}
 
-		fabPicture.setEnabled(false);
 		fabSwitch.setEnabled(false);
 		controller.takePicture(b.build());
 	}

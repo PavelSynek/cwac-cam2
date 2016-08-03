@@ -1,10 +1,10 @@
 /***
  * Copyright (c) 2015 CommonsWare, LLC
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
  * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -53,7 +53,9 @@ public class CameraView extends TextureView implements TextureView.SurfaceTextur
 	 */
 	public CameraView(Context context) {
 		super(context, null);
-		initListener();
+		if (!isInEditMode()) {
+			initListener();
+		}
 	}
 
 	/**
@@ -64,7 +66,9 @@ public class CameraView extends TextureView implements TextureView.SurfaceTextur
 	 */
 	public CameraView(Context context, AttributeSet attrs) {
 		super(context, attrs, 0);
-		initListener();
+		if (!isInEditMode()) {
+			initListener();
+		}
 	}
 
 	/**
@@ -79,7 +83,9 @@ public class CameraView extends TextureView implements TextureView.SurfaceTextur
 	 */
 	public CameraView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		initListener();
+		if (!isInEditMode()) {
+			initListener();
+		}
 	}
 
 	/**
@@ -183,9 +189,7 @@ public class CameraView extends TextureView implements TextureView.SurfaceTextur
 
 	// based on https://github.com/googlesamples/android-Camera2Basic/blob/master/Application/src/main/java/com/example/android/camera2basic/Camera2BasicFragment.java
 
-	private void adjustAspectRatio(int previewWidth,
-								   int previewHeight,
-								   int rotation) {
+	private void adjustAspectRatio(int previewWidth, int previewHeight, int rotation) {
 		Matrix txform = new Matrix();
 		int viewWidth = getWidth();
 		int viewHeight = getHeight();
