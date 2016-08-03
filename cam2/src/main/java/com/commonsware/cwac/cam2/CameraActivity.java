@@ -1,10 +1,10 @@
 /***
  * Copyright (c) 2015-2016 CommonsWare, LLC
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
  * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.LayoutRes;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -64,6 +65,8 @@ public class CameraActivity extends AbstractCameraActivity implements Confirmati
 	 * tag. Defaults to false (meaning: do the rotation if needed).
 	 */
 	public static final String EXTRA_SKIP_ORIENTATION_NORMALIZATION = "cwac_cam2_skip_orientation_normalization";
+
+	public static final String EXTRA_CUSTOM_LAYOUT = "cwac_cam2_custom_layout";
 
 	private static final String TAG_CONFIRM = ConfirmationFragment.class.getCanonicalName();
 	private static final String[] PERMS = {Manifest.permission.CAMERA};
@@ -197,11 +200,12 @@ public class CameraActivity extends AbstractCameraActivity implements Confirmati
 
 	@Override
 	protected CameraFragment buildFragment() {
-		return (CameraFragment.newPictureInstance(getOutputUri(),
+		return CameraFragment.newPictureInstance(getOutputUri(),
 				getIntent().getBooleanExtra(EXTRA_UPDATE_MEDIA_STORE, false),
 				getIntent().getIntExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1),
 				getIntent().getBooleanExtra(EXTRA_FACING_EXACT_MATCH, false),
-				getIntent().getBooleanExtra(EXTRA_SKIP_ORIENTATION_NORMALIZATION, false)));
+				getIntent().getBooleanExtra(EXTRA_SKIP_ORIENTATION_NORMALIZATION, false),
+				getIntent().getIntExtra(EXTRA_CUSTOM_LAYOUT, 0));
 	}
 
 	private void removeFragments() {
@@ -251,7 +255,7 @@ public class CameraActivity extends AbstractCameraActivity implements Confirmati
 		public IntentBuilder skipConfirm() {
 			result.putExtra(EXTRA_CONFIRM, false);
 
-			return (this);
+			return this;
 		}
 
 		/**
@@ -263,13 +267,13 @@ public class CameraActivity extends AbstractCameraActivity implements Confirmati
 		public IntentBuilder skipOrientationNormalization() {
 			result.putExtra(EXTRA_SKIP_ORIENTATION_NORMALIZATION, true);
 
-			return (this);
+			return this;
 		}
 
 		public IntentBuilder debugSavePreviewFrame() {
 			result.putExtra(EXTRA_DEBUG_SAVE_PREVIEW_FRAME, true);
 
-			return (this);
+			return this;
 		}
 
 		/**
@@ -289,7 +293,12 @@ public class CameraActivity extends AbstractCameraActivity implements Confirmati
 
 			result.putExtra(EXTRA_CONFIRMATION_QUALITY, quality);
 
-			return (this);
+			return this;
+		}
+
+		public IntentBuilder customLayout(@LayoutRes int layout) {
+			result.putExtra(EXTRA_CUSTOM_LAYOUT, layout);
+			return this;
 		}
 	}
 }
