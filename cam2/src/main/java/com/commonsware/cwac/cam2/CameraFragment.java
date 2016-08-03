@@ -44,7 +44,6 @@ public class CameraFragment extends Fragment {
 	private static final String ARG_FACING_EXACT_MATCH = "facingExactMatch";
 	private static final String ARG_CUSTOM_LAYOUT = "customLayout";
 	private CameraController controller;
-	private CameraView cameraView;
 	private ViewGroup previewStack;
 	private FloatingActionButton fabSwitch;
 	private View progress;
@@ -187,7 +186,7 @@ public class CameraFragment extends Fragment {
 			}
 		});
 
-		cameraView = (CameraView) v.findViewById(R.id.cwac_cam2_camera_view);
+		CameraView cameraView = (CameraView) v.findViewById(R.id.cwac_cam2_camera_view);
 		cameraView.setOnClickListener(new View.OnClickListener() {
 			@Override public void onClick(View view) {
 				takePicture();
@@ -214,8 +213,7 @@ public class CameraFragment extends Fragment {
 				controller.stop();
 			} catch (Exception e) {
 				controller.postError(ErrorConstants.ERROR_STOPPING, e);
-				Log.e(getClass().getSimpleName(),
-						"Exception stopping controller", e);
+				Log.e(getClass().getSimpleName(), "Exception stopping controller", e);
 			}
 		}
 	}
@@ -286,7 +284,7 @@ public class CameraFragment extends Fragment {
 	}
 
 	private boolean canSwitchSources() {
-		return (!getArguments().getBoolean(ARG_FACING_EXACT_MATCH, false));
+		return !getArguments().getBoolean(ARG_FACING_EXACT_MATCH, false);
 	}
 
 	private void prepController() {

@@ -32,6 +32,7 @@ import com.commonsware.cwac.cam2.util.Size;
  * maintaining aspect ratios and dealing with full-bleed previews.
  */
 public class CameraView extends TextureView implements TextureView.SurfaceTextureListener {
+
 	public interface StateCallback {
 		void onReady(CameraView cv);
 
@@ -166,12 +167,11 @@ public class CameraView extends TextureView implements TextureView.SurfaceTextur
 			try {
 				stateCallback.onDestroyed(this);
 			} catch (Exception e) {
-				Log.e(getClass().getSimpleName(),
-						"Exception destroying state", e);
+				Log.e(getClass().getSimpleName(), "Exception destroying state", e);
 			}
 		}
 
-		return (false);
+		return false;
 	}
 
 	@Override
@@ -190,7 +190,7 @@ public class CameraView extends TextureView implements TextureView.SurfaceTextur
 	// based on https://github.com/googlesamples/android-Camera2Basic/blob/master/Application/src/main/java/com/example/android/camera2basic/Camera2BasicFragment.java
 
 	private void adjustAspectRatio(int previewWidth, int previewHeight, int rotation) {
-		Matrix txform = new Matrix();
+		Matrix transform = new Matrix();
 		int viewWidth = getWidth();
 		int viewHeight = getHeight();
 		RectF rectView = new RectF(0, 0, viewWidth, viewHeight);
@@ -205,25 +205,25 @@ public class CameraView extends TextureView implements TextureView.SurfaceTextur
 			rectPreview.offset(viewCenterX - previewCenterX,
 					viewCenterY - previewCenterY);
 
-			txform.setRectToRect(rectView, rectPreview,
+			transform.setRectToRect(rectView, rectPreview,
 					Matrix.ScaleToFit.FILL);
 
 			float scale = Math.max((float) viewHeight / previewHeight,
 					(float) viewWidth / previewWidth);
 
-			txform.postScale(scale, scale, viewCenterX, viewCenterY);
-			txform.postRotate(90 * (rotation - 2), viewCenterX,
+			transform.postScale(scale, scale, viewCenterX, viewCenterY);
+			transform.postRotate(90 * (rotation - 2), viewCenterX,
 					viewCenterY);
 		} else {
 			if (Surface.ROTATION_180 == rotation) {
-				txform.postRotate(180, viewCenterX, viewCenterY);
+				transform.postRotate(180, viewCenterX, viewCenterY);
 			}
 		}
 
 		if (mirror) {
-			txform.postScale(-1, 1, viewCenterX, viewCenterY);
+			transform.postScale(-1, 1, viewCenterX, viewCenterY);
 		}
 
-		setTransform(txform);
+		setTransform(transform);
 	}
 }
