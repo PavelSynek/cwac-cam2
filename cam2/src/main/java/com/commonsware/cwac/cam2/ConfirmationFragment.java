@@ -14,10 +14,8 @@
 
 package com.commonsware.cwac.cam2;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -77,33 +75,6 @@ public class ConfirmationFragment extends Fragment {
 		}
 
 		return (iv);
-	}
-
-	@Override
-	public void onHiddenChanged(boolean isHidden) {
-		super.onHiddenChanged(isHidden);
-
-		if (!isHidden) {
-			ActionBar ab = getActivity().getActionBar();
-
-			if (ab == null) {
-				throw new IllegalStateException("CameraActivity confirmation requires an action bar!");
-			} else {
-				ab.setBackgroundDrawable(getActivity()
-						.getResources()
-						.getDrawable(R.drawable.cwac_cam2_action_bar_bg_translucent));
-				ab.setTitle("");
-
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-					ab.setDisplayHomeAsUpEnabled(true);
-					ab.setHomeAsUpIndicator(R.drawable.cwac_cam2_ic_close_white);
-				} else {
-					ab.setIcon(R.drawable.cwac_cam2_ic_close_white);
-					ab.setDisplayShowHomeEnabled(true);
-					ab.setHomeButtonEnabled(true);
-				}
-			}
-		}
 	}
 
 	@Override

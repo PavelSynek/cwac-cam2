@@ -14,10 +14,8 @@
 
 package com.commonsware.cwac.cam2;
 
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.util.Log;
@@ -91,29 +89,6 @@ public class CameraFragment extends Fragment {
 
 		if (controller != null) {
 			controller.start();
-		}
-	}
-
-	@Override
-	public void onHiddenChanged(boolean isHidden) {
-		super.onHiddenChanged(isHidden);
-
-		if (!isHidden) {
-			ActionBar ab = getActivity().getActionBar();
-
-			if (ab != null) {
-				ab.setBackgroundDrawable(getActivity()
-						.getResources()
-						.getDrawable(R.drawable.cwac_cam2_action_bar_bg_transparent));
-				ab.setTitle("");
-
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-					ab.setDisplayHomeAsUpEnabled(false);
-				} else {
-					ab.setDisplayShowHomeEnabled(false);
-					ab.setHomeButtonEnabled(false);
-				}
-			}
 		}
 	}
 
@@ -191,9 +166,6 @@ public class CameraFragment extends Fragment {
 				takePicture();
 			}
 		});
-
-		onHiddenChanged(false); // hack, since this does not get
-		// called on initial display
 
 		switchCamera.setEnabled(false);
 
