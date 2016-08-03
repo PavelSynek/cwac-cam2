@@ -328,9 +328,7 @@ abstract public class AbstractCameraActivity extends Activity {
 		ResultReceiver onError =
 				getIntent().getParcelableExtra(EXTRA_UNHANDLED_ERROR_RECEIVER);
 
-		CameraController ctrl =
-				new CameraController(focusMode, onError,
-						allowChangeFlashMode, false);
+		CameraController ctrl = new CameraController(focusMode, onError, allowChangeFlashMode);
 
 		cameraFrag.setController(ctrl);
 		cameraFrag

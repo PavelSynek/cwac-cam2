@@ -37,17 +37,14 @@ import com.commonsware.cwac.cam2.SimpleClassicCameraConfigurator;
  */
 public class FocusModePlugin implements CameraPlugin {
 	private final Context ctxt;
-	private final boolean isVideo;
 	private final FocusMode focusMode;
 	private OrientationEventListener orientationEventListener;
 	private int lastOrientation = OrientationEventListener.ORIENTATION_UNKNOWN;
 
 	public FocusModePlugin(Context ctxt,
-						   FocusMode focusMode,
-						   boolean isVideo) {
+						   FocusMode focusMode) {
 		this.ctxt = ctxt.getApplicationContext();
 		this.focusMode = focusMode;
-		this.isVideo = isVideo;
 
 		orientationEventListener = new OrientationEventListener(ctxt) {
 			@Override
@@ -115,9 +112,6 @@ public class FocusModePlugin implements CameraPlugin {
 				} else if (focusMode ==
 						FocusMode.MACRO) {
 					desiredMode = Camera.Parameters.FOCUS_MODE_MACRO;
-				} else if (isVideo) {
-					desiredMode =
-							Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO;
 				} else {
 					desiredMode =
 							Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE;
@@ -179,8 +173,6 @@ public class FocusModePlugin implements CameraPlugin {
 				desiredMode = CameraMetadata.CONTROL_AF_MODE_EDOF;
 			} else if (focusMode == FocusMode.MACRO) {
 				desiredMode = CameraMetadata.CONTROL_AF_MODE_MACRO;
-			} else if (isVideo) {
-				desiredMode = CameraMetadata.CONTROL_AF_MODE_CONTINUOUS_VIDEO;
 			} else {
 				desiredMode = CameraMetadata.CONTROL_AF_MODE_CONTINUOUS_PICTURE;
 			}

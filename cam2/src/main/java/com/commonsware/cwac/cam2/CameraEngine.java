@@ -45,8 +45,7 @@ abstract public class CameraEngine {
 	private ThreadPoolExecutor pool;
 	private File savePreviewFile = null;
 	protected List<FlashMode> preferredFlashModes;
-	protected ArrayList<FlashMode> eligibleFlashModes =
-			new ArrayList<FlashMode>();
+	protected ArrayList<FlashMode> eligibleFlashModes = new ArrayList<FlashMode>();
 
 	public enum ID {
 		CLASSIC,
@@ -182,28 +181,6 @@ abstract public class CameraEngine {
 	}
 
 	/**
-	 * Event raised when picture is taken, as a result of a
-	 * takePicture() call. May include an exception if there was
-	 * an exception accessing the camera.
-	 */
-	public static class VideoTakenEvent extends CrashableEvent {
-		private VideoTransaction xact;
-
-		public VideoTakenEvent(VideoTransaction xact) {
-			super();
-			this.xact = xact;
-		}
-
-		public VideoTakenEvent(Exception exception) {
-			super(exception);
-		}
-
-		public VideoTransaction getVideoTransaction() {
-			return (xact);
-		}
-	}
-
-	/**
 	 * Base class for all ¯\_(ツ)_/¯ errors triggered by camera2
 	 * API operations that we really should surface to callers,
 	 * but either are not tied to specific requests or happen
@@ -297,12 +274,6 @@ abstract public class CameraEngine {
 	 */
 	abstract public void takePicture(CameraSession session,
 									 PictureTransaction xact);
-
-	abstract public void recordVideo(CameraSession session,
-									 VideoTransaction xact) throws Exception;
-
-	abstract public void stopVideoRecording(CameraSession session,
-											boolean abandon) throws Exception;
 
 	abstract public void handleOrientationChange(CameraSession session,
 												 OrientationChangedEvent event);

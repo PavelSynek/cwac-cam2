@@ -311,16 +311,6 @@ public class CameraTwoEngine extends CameraEngine {
 		// TODO
 	}
 
-	@Override
-	public void recordVideo(CameraSession session, VideoTransaction xact) {
-		// TODO
-	}
-
-	@Override
-	public void stopVideoRecording(CameraSession session, boolean abandon) {
-		// TODO
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */

@@ -47,13 +47,10 @@ public class CameraController implements CameraView.StateCallback {
 	private CameraSession session;
 	private List<CameraDescriptor> cameras = null;
 	private int currentCamera = 0;
-	private final HashMap<CameraDescriptor, CameraView> previews =
-			new HashMap<CameraDescriptor, CameraView>();
+	private final HashMap<CameraDescriptor, CameraView> previews = new HashMap<CameraDescriptor, CameraView>();
 	private Queue<CameraView> availablePreviews = null;
 	private boolean switchPending = false;
-	private boolean isVideoRecording = false;
 	private final FocusMode focusMode;
-	private final boolean isVideo;
 	private FlashModePlugin flashModePlugin;
 	private int zoomLevel = 0;
 	private int quality = 0;
@@ -61,12 +58,10 @@ public class CameraController implements CameraView.StateCallback {
 
 	public CameraController(FocusMode focusMode,
 							ResultReceiver onError,
-							boolean allowChangeFlashMode,
-							boolean isVideo) {
+							boolean allowChangeFlashMode) {
 		this.onError = onError;
 		this.focusMode = focusMode == null ?
 				FocusMode.CONTINUOUS : focusMode;
-		this.isVideo = isVideo;
 		this.allowChangeFlashMode = allowChangeFlashMode;
 	}
 
@@ -122,8 +117,6 @@ public class CameraController implements CameraView.StateCallback {
 	 */
 	public void stop() throws Exception {
 		if (session != null) {
-			stopVideoRecording(true);
-
 			CameraSession temp = session;
 
 			session = null;
@@ -210,23 +203,6 @@ public class CameraController implements CameraView.StateCallback {
 	public void takePicture(PictureTransaction xact) {
 		if (session != null) {
 			engine.takePicture(session, xact);
-		}
-	}
-
-	public void recordVideo(VideoTransaction xact) throws Exception {
-		if (session != null) {
-			engine.recordVideo(session, xact);
-			isVideoRecording = true;
-		}
-	}
-
-	public void stopVideoRecording(boolean abandon) throws Exception {
-		if (session != null && isVideoRecording) {
-			try {
-				engine.stopVideoRecording(session, abandon);
-			} finally {
-				isVideoRecording = false;
-			}
 		}
 	}
 
@@ -332,7 +308,7 @@ public class CameraController implements CameraView.StateCallback {
 						.addPlugin(new SizeAndFormatPlugin(previewSize,
 								pictureSize, ImageFormat.JPEG))
 						.addPlugin(new OrientationPlugin(cv.getContext()))
-						.addPlugin(new FocusModePlugin(cv.getContext(), focusMode, isVideo))
+						.addPlugin(new FocusModePlugin(cv.getContext(), focusMode))
 						.addPlugin(flashModePlugin)
 						.build();
 

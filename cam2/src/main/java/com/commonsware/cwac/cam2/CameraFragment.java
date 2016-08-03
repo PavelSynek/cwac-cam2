@@ -14,10 +14,6 @@
 
 package com.commonsware.cwac.cam2;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.net.Uri;
@@ -27,11 +23,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.OvershootInterpolator;
-import android.widget.ImageView;
 
 import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 
 import java.util.LinkedList;
 
@@ -42,12 +35,13 @@ import de.greenrobot.event.EventBus;
  * you (or the user) to take a picture.
  */
 public class CameraFragment extends Fragment {
+
 	private static final String ARG_OUTPUT = "output";
 	private static final String ARG_UPDATE_MEDIA_STORE = "updateMediaStore";
 	private static final String ARG_SKIP_ORIENTATION_NORMALIZATION = "skipOrientationNormalization";
 	private static final String ARG_QUALITY = "quality";
 	private static final String ARG_FACING_EXACT_MATCH = "facingExactMatch";
-	private CameraController ctlr;
+	private CameraController controller;
 	private ViewGroup previewStack;
 	private FloatingActionButton fabPicture;
 	private FloatingActionButton fabSwitch;
@@ -93,8 +87,8 @@ public class CameraFragment extends Fragment {
 
 		EventBus.getDefault().register(this);
 
-		if (ctlr != null) {
-			ctlr.start();
+		if (controller != null) {
+			controller.start();
 		}
 	}
 
@@ -132,11 +126,11 @@ public class CameraFragment extends Fragment {
 	 */
 	@Override
 	public void onStop() {
-		if (ctlr != null) {
+		if (controller != null) {
 			try {
-				ctlr.stop();
+				controller.stop();
 			} catch (Exception e) {
-				ctlr.postError(ErrorConstants.ERROR_STOPPING, e);
+				controller.postError(ErrorConstants.ERROR_STOPPING, e);
 				Log.e(getClass().getSimpleName(), "Exception stopping controller", e);
 			}
 		}
@@ -153,8 +147,8 @@ public class CameraFragment extends Fragment {
 	 */
 	@Override
 	public void onDestroy() {
-		if (ctlr != null) {
-			ctlr.destroy();
+		if (controller != null) {
+			controller.destroy();
 		}
 
 		super.onDestroy();
@@ -193,15 +187,13 @@ public class CameraFragment extends Fragment {
 				fabSwitch.setEnabled(false);
 
 				try {
-					ctlr.switchCamera();
+					controller.switchCamera();
 				} catch (Exception e) {
-					ctlr.postError(ErrorConstants.ERROR_SWITCHING_CAMERAS, e);
+					controller.postError(ErrorConstants.ERROR_SWITCHING_CAMERAS, e);
 					Log.e(getClass().getSimpleName(), "Exception switching camera", e);
 				}
 			}
 		});
-
-		changeMenuIconAnimation((FloatingActionMenu) v.findViewById(R.id.cwac_cam2_settings));
 
 		onHiddenChanged(false); // hack, since this does not get
 		// called on initial display
@@ -209,7 +201,7 @@ public class CameraFragment extends Fragment {
 		fabPicture.setEnabled(false);
 		fabSwitch.setEnabled(false);
 
-		if (ctlr != null && ctlr.getNumberOfCameras() > 0) {
+		if (controller != null && controller.getNumberOfCameras() > 0) {
 			prepController();
 		}
 
@@ -219,22 +211,15 @@ public class CameraFragment extends Fragment {
 	public void shutdown() {
 		progress.setVisibility(View.VISIBLE);
 
-		if (ctlr != null) {
+		if (controller != null) {
 			try {
-				ctlr.stop();
+				controller.stop();
 			} catch (Exception e) {
-				ctlr.postError(ErrorConstants.ERROR_STOPPING, e);
+				controller.postError(ErrorConstants.ERROR_STOPPING, e);
 				Log.e(getClass().getSimpleName(),
 						"Exception stopping controller", e);
 			}
 		}
-	}
-
-	/**
-	 * @return the CameraController this fragment delegates to
-	 */
-	public CameraController getController() {
-		return (ctlr);
 	}
 
 	/**
@@ -245,11 +230,11 @@ public class CameraFragment extends Fragment {
 	public void setController(CameraController ctlr) {
 		int currentCamera = -1;
 
-		if (this.ctlr != null) {
-			currentCamera = this.ctlr.getCurrentCamera();
+		if (this.controller != null) {
+			currentCamera = this.controller.getCurrentCamera();
 		}
 
-		this.ctlr = ctlr;
+		this.controller = ctlr;
 		ctlr.setQuality(getArguments().getInt(ARG_QUALITY, 1));
 
 		if (currentCamera > -1) {
@@ -270,7 +255,7 @@ public class CameraFragment extends Fragment {
 
 	@SuppressWarnings("unused")
 	public void onEventMainThread(CameraController.ControllerReadyEvent event) {
-		if (event.isEventForController(ctlr)) {
+		if (event.isEventForController(controller)) {
 			prepController();
 		}
 	}
@@ -283,7 +268,7 @@ public class CameraFragment extends Fragment {
 			fabPicture.setEnabled(true);
 			previewStack.setOnTouchListener(null);
 		} else {
-			ctlr.postError(ErrorConstants.ERROR_OPEN_CAMERA, event.exception);
+			controller.postError(ErrorConstants.ERROR_OPEN_CAMERA, event.exception);
 			getActivity().finish();
 		}
 	}
@@ -301,7 +286,7 @@ public class CameraFragment extends Fragment {
 
 		fabPicture.setEnabled(false);
 		fabSwitch.setEnabled(false);
-		ctlr.takePicture(b.build());
+		controller.takePicture(b.build());
 	}
 
 	private boolean canSwitchSources() {
@@ -309,13 +294,13 @@ public class CameraFragment extends Fragment {
 	}
 
 	private void prepController() {
-		LinkedList<CameraView> cameraViews = new LinkedList<CameraView>();
+		LinkedList<CameraView> cameraViews = new LinkedList<>();
 		CameraView cv = (CameraView) previewStack.getChildAt(0);
 
 		cv.setMirror(mirrorPreview);
 		cameraViews.add(cv);
 
-		for (int i = 1; i < ctlr.getNumberOfCameras(); i++) {
+		for (int i = 1; i < controller.getNumberOfCameras(); i++) {
 			cv = new CameraView(getActivity());
 			cv.setVisibility(View.INVISIBLE);
 			cv.setMirror(mirrorPreview);
@@ -323,38 +308,6 @@ public class CameraFragment extends Fragment {
 			cameraViews.add(cv);
 		}
 
-		ctlr.setCameraViews(cameraViews);
-	}
-
-	// based on https://goo.gl/3IUM8K
-
-	private void changeMenuIconAnimation(final FloatingActionMenu menu) {
-		AnimatorSet set = new AnimatorSet();
-		final ImageView v = menu.getMenuIconView();
-		ObjectAnimator scaleOutX = ObjectAnimator.ofFloat(v, "scaleX", 1.0f, 0.2f);
-		ObjectAnimator scaleOutY = ObjectAnimator.ofFloat(v, "scaleY", 1.0f, 0.2f);
-		ObjectAnimator scaleInX = ObjectAnimator.ofFloat(v, "scaleX", 0.2f, 1.0f);
-		ObjectAnimator scaleInY = ObjectAnimator.ofFloat(v, "scaleY", 0.2f, 1.0f);
-
-		scaleOutX.setDuration(50);
-		scaleOutY.setDuration(50);
-
-		scaleInX.setDuration(150);
-		scaleInY.setDuration(150);
-		scaleInX.addListener(new AnimatorListenerAdapter() {
-			@Override
-			public void onAnimationStart(Animator animation) {
-				v.setImageResource(menu.isOpened()
-						? R.drawable.cwac_cam2_ic_action_settings
-						: R.drawable.cwac_cam2_ic_close);
-				// yes, that seems backwards, but it works
-				// presumably, opened state not yet toggled
-			}
-		});
-
-		set.play(scaleOutX).with(scaleOutY);
-		set.play(scaleInX).with(scaleInY).after(scaleOutX);
-		set.setInterpolator(new OvershootInterpolator(2));
-		menu.setIconToggleAnimatorSet(set);
+		controller.setCameraViews(cameraViews);
 	}
 }

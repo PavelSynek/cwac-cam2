@@ -27,7 +27,6 @@ import android.util.Log;
 import com.commonsware.cwac.cam2.util.Size;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -46,7 +45,6 @@ public class ClassicCameraEngine extends CameraEngine
 	private final Context ctxt;
 	private List<Descriptor> descriptors = null;
 	private MediaRecorder recorder;
-	private VideoTransaction xact;
 	private int previewWidth, previewHeight;
 	private int previewFormat;
 
@@ -263,67 +261,6 @@ public class ClassicCameraEngine extends CameraEngine
 		});
 	}
 
-	@Override
-	public void recordVideo(CameraSession session,
-							VideoTransaction xact) throws Exception {
-		Descriptor descriptor = (Descriptor) session.getDescriptor();
-		Camera camera = descriptor.getCamera();
-
-		if (camera != null) {
-			camera.stopPreview();
-			camera.unlock();
-
-			try {
-				recorder = new MediaRecorder();
-				recorder.setCamera(camera);
-				recorder.setAudioSource(
-						MediaRecorder.AudioSource.CAMCORDER);
-				recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-
-				((Session) session).configureRecorder(xact, recorder);
-
-				recorder.setOutputFile(xact.getOutputPath().getAbsolutePath());
-				recorder.setMaxFileSize(xact.getSizeLimit());
-				recorder.setMaxDuration(xact.getDurationLimit());
-				recorder.setOnInfoListener(this);
-				recorder.prepare();
-				recorder.start();
-				this.xact = xact;
-			} catch (IOException e) {
-				recorder.release();
-				recorder = null;
-				throw e;
-			}
-		}
-	}
-
-	@Override
-	public void stopVideoRecording(CameraSession session,
-								   boolean abandon) throws Exception {
-		Descriptor descriptor = (Descriptor) session.getDescriptor();
-		Camera camera = descriptor.getCamera();
-
-		if (camera != null && recorder != null) {
-			MediaRecorder tempRecorder = recorder;
-
-			recorder = null;
-
-			tempRecorder.stop();
-			tempRecorder.release();
-
-			if (!abandon) {
-				camera.reconnect();
-				camera.startPreview();
-			}
-		}
-
-		if (!abandon) {
-			getBus().post(new VideoTakenEvent(xact));
-		}
-
-		xact = null;
-	}
-
 /*
   @Override
   public boolean shouldSwapPreviewDimensions(CameraSession session) {
@@ -366,8 +303,6 @@ public class ClassicCameraEngine extends CameraEngine
 				tempRecorder.stop();
 				tempRecorder.release();
 			}
-
-			getBus().post(new VideoTakenEvent(xact));
 		}
 	}
 
