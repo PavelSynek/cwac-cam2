@@ -10,13 +10,12 @@ android {
     }
 
     packagingOptions {
-        exclude 'LICENSE.txt' // required for no good reason...
+        exclude 'LICENSE.txt'
     }
 
 }
 
 dependencies {
-    compile 'com.github.clans:fab:1.6.2'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.android.support:appcompat-v7:24.1.0'
+    compile 'com.android.support:appcompat-v7:24.1.1'
 }

@@ -1,10 +1,10 @@
 /***
  * Copyright (c) 2015-2016 CommonsWare, LLC
- * <p>
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
  * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,8 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.github.clans.fab.FloatingActionButton;
+import android.widget.ImageButton;
 
 import java.util.LinkedList;
 
@@ -45,7 +44,7 @@ public class CameraFragment extends Fragment {
 	private static final String ARG_CUSTOM_LAYOUT = "customLayout";
 	private CameraController controller;
 	private ViewGroup previewStack;
-	private FloatingActionButton fabSwitch;
+	private ImageButton switchCamera;
 	private View progress;
 	private boolean mirrorPreview = false;
 
@@ -170,12 +169,12 @@ public class CameraFragment extends Fragment {
 
 		progress = v.findViewById(R.id.cwac_cam2_progress);
 
-		fabSwitch = (FloatingActionButton) v.findViewById(R.id.cwac_cam2_switch_camera);
-		fabSwitch.setOnClickListener(new View.OnClickListener() {
+		switchCamera = (ImageButton) v.findViewById(R.id.cwac_cam2_switch_camera);
+		switchCamera.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				progress.setVisibility(View.VISIBLE);
-				fabSwitch.setEnabled(false);
+				switchCamera.setEnabled(false);
 
 				try {
 					controller.switchCamera();
@@ -196,7 +195,7 @@ public class CameraFragment extends Fragment {
 		onHiddenChanged(false); // hack, since this does not get
 		// called on initial display
 
-		fabSwitch.setEnabled(false);
+		switchCamera.setEnabled(false);
 
 		if (controller != null && controller.getNumberOfCameras() > 0) {
 			prepController();
@@ -260,7 +259,7 @@ public class CameraFragment extends Fragment {
 	public void onEventMainThread(CameraEngine.OpenedEvent event) {
 		if (event.exception == null) {
 			progress.setVisibility(View.GONE);
-			fabSwitch.setEnabled(canSwitchSources());
+			switchCamera.setEnabled(canSwitchSources());
 			previewStack.setOnTouchListener(null);
 		} else {
 			controller.postError(ErrorConstants.ERROR_OPEN_CAMERA, event.exception);
@@ -279,7 +278,7 @@ public class CameraFragment extends Fragment {
 					getArguments().getBoolean(ARG_SKIP_ORIENTATION_NORMALIZATION, false));
 		}
 
-		fabSwitch.setEnabled(false);
+		switchCamera.setEnabled(false);
 		controller.takePicture(b.build());
 	}
 
