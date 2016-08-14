@@ -69,7 +69,7 @@ public class ClassicCameraEngine extends CameraEngine
 			public void run() {
 				if (descriptors == null) {
 					int count = Camera.getNumberOfCameras();
-					List<Descriptor> result = new ArrayList<Descriptor>();
+					List<Descriptor> result = new ArrayList<>();
 					Camera.CameraInfo info = new Camera.CameraInfo();
 
 					for (int cameraId = 0; cameraId < count; cameraId++) {
@@ -78,35 +78,39 @@ public class ClassicCameraEngine extends CameraEngine
 
 						Camera camera = Camera.open(descriptor.getCameraId());
 						Camera.Parameters params = camera.getParameters();
-						ArrayList<Size> sizes = new ArrayList<Size>();
 
-						for (Camera.Size size : params.getSupportedPreviewSizes()) {
-							if (size.height < 2160 && size.width < 2160) {
-								sizes.add(new Size(size.width, size.height));
+						if (params != null) {
+							ArrayList<Size> sizes = new ArrayList<>();
+
+							for (Camera.Size size : params.getSupportedPreviewSizes()) {
+								if (size.height < 2160 && size.width < 2160) {
+									sizes.add(new Size(size.width, size.height));
+								}
 							}
+
+							descriptor.setPreviewSizes(sizes);
+
+							sizes = new ArrayList<>();
+
+							for (Camera.Size size : params.getSupportedPictureSizes()) {
+								if (!"samsung".equals(Build.MANUFACTURER) ||
+										!"jflteuc".equals(Build.PRODUCT) ||
+										size.width < 2048) {
+									sizes.add(new Size(size.width, size.height));
+								}
+							}
+
+							descriptor.setPictureSizes(sizes);
+							result.add(descriptor);
 						}
 
-						descriptor.setPreviewSizes(sizes);
-
-						sizes = new ArrayList<Size>();
-
-						for (Camera.Size size : params.getSupportedPictureSizes()) {
-							if (!"samsung".equals(Build.MANUFACTURER) ||
-									!"jflteuc".equals(Build.PRODUCT) ||
-									size.width < 2048) {
-								sizes.add(new Size(size.width, size.height));
-							}
-						}
-
-						descriptor.setPictureSizes(sizes);
 						camera.release();
-						result.add(descriptor);
 					}
 
 					descriptors = result;
 				}
 
-				List<CameraDescriptor> result = new ArrayList<CameraDescriptor>();
+				List<CameraDescriptor> result = new ArrayList<>();
 
 				for (Descriptor descriptor : descriptors) {
 					if (!criteria.getFacingExactMatch() ||
